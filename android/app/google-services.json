@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "306537205723",
+    "firebase_url": "https://linkozi-2e9d1-default-rtdb.firebaseio.com",
+    "project_id": "linkozi-2e9d1",
+    "storage_bucket": "linkozi-2e9d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306537205723:android:28051d5c43f3de4e4c61fe",
+        "android_client_info": {
+          "package_name": "com.LINKOZI"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1mcfeqMYb89qSaPWykDNUDpkziSZtqJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

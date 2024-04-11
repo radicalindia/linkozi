@@ -11,13 +11,15 @@ export const  globalStyles = {
       backgroundColor:"rgba(255,255,255,.8)",
       // opacity:.8,
         height: 40,
-        borderRadius: 20,
+        borderRadius: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 7,
         alignItems: 'center',
-        elevation:1,
-        marginVertical:10
+        // elevation:1,
+        marginVertical:10,
+        borderWidth:.3,
+        borderColor:"rgba(0,0,0,.1)"
       },
     rowflex2:{
         flexDirection:"row",
@@ -51,7 +53,7 @@ export const  globalStyles = {
     container2:{
         width:"100%",
         height:"100%",
-        backgroundColor:"white",
+        backgroundColor:theme.colors.bg,
         paddingHorizontal:15,
         // paddingVertical:10,
         paddingBottom:70,
@@ -65,6 +67,19 @@ export const  globalStyles = {
         paddingHorizontal:10,
         paddingVertical:10
         
-    }
+    },
+    box:{
+      height: 90,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      width: '99.5%',
+      marginLeft: 1,
+  
+      padding: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      elevation: 1,
+      marginVertical: 10,
+    },
 
 }

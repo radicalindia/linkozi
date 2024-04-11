@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { globalStyles } from '../utils/GlobalStyles'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CustomTextInput } from '../components/CustomTextInput';
@@ -23,22 +23,43 @@ const CreateAccount = () => {
     const genderArray = ["male", "female", "other"];
     const [ loading,setLoading]=useState(false);
     const dispatch = useDispatch()
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const [ visible,setVisible]=useState(false);
+    const [ data,setdata]=useState();
+    const [ userid,setUser]= useState();
+    
 
+    useEffect(()=>{
+        const fetch =async()=>{
+
+     const data = await AsyncStorage.getItem("user")
+      const json = JSON.parse(data)
+      const userid = await AsyncStorage.getItem('userid')
+     if(json){
+        setdata(json.response);
+        setUser(userid);
+        console.log(userid)
+     }
+        }
+        fetch()
+    },[])
 
     const createAccount = async() => {
-
+        const fcmtoekn = await AsyncStorage.getItem("fcmtoken");
+         
         const body={
             method: 'register',
             name: name?.trim(),
-            age: age?.trim(),
-            gender: gender,
+            // age: age?.trim(),
+            // gender: gender,
             phone: phone?.trim(),
             email: email?.trim(),
-            password:password?.trim()
+            password:password?.trim(),
+            deviceId:fcmtoekn
+
         }
         setLoading(true)
-        axios.get('https://medicalonwheel.com/appapi/activity.php', {
+        axios.get('https://sellpe.in/circel13/api/activity.php', {
             params: {
             ...body
             }
@@ -46,16 +67,56 @@ const CreateAccount = () => {
             .then(response => {
                 console.log('Response:', response.data);
                 setLoading(false)
-                if(response?.data?.response?.userId){
-                    AsyncStorage.setItem("user",JSON.stringify(response.data));
-                    dispactch(addNavREf("Home"))
-                    navigation.replace("Home");
+                if(response?.data?.response?.status==1){
+                    // AsyncStorage.setItem("user",JSON.stringify(response.data?.response));
+                    // dispactch(addNavREf("Home"))
+                    navigation.replace("Login");
+                    console.log(response?.data);
                   }
-                  Alert.alert("Invalid Credentials")
+                //   Alert.alert("Invalid Credentials")
 
             })
             .catch(error => {
                 console.error('Error:', error);
+               Alert.alert("Network Error")
+                setLoading(false)
+            });
+    
+        
+    }
+
+    const UpdateAcc = async() => {
+
+        const body={
+            method: 'edituser',
+            name: name?.trim(),
+            // age: age?.trim(),
+            // gender: gender,
+            phone: phone?.trim(),
+            email: email?.trim(),
+            userId:1
+        }
+        setLoading(true)
+        axios.get('https://sellpe.in/circel13/api/activity.php', {
+            params: {
+            ...body
+            }
+        })
+            .then(response => {
+                console.log('Response:', response.data);
+                setLoading(false)
+                if(response?.data?.response?.status==1){
+                    AsyncStorage.setItem("user",JSON.stringify(response.data?.response));
+                    dispactch(addNavREf("Home"))
+                    navigation.replace("Home");
+                    console.log(response?.data);
+                  }
+                //   Alert.alert("Invalid Credentials")
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+               Alert.alert("Network Error")
                 setLoading(false)
             });
     
@@ -63,35 +124,20 @@ const CreateAccount = () => {
     }
 
     return (
-        <ScrollView contentContainerStyle={{ padding: 20, backgroundColor: "white", }}>
-            <Text style={[globalStyles.text, { fontSize: 22, marginTop: 20 }]}>Create Account!</Text>
-            <Text style={[globalStyles.text2]}>Sign up to continue</Text>
-            <View style={[globalStyles.rowflex, { marginTop: 50 }]}>
-                <TouchableOpacity style={[styles.googleButton]}>
-                    <Image source={require("../assests/images/fb.png")} />
-                    <Text style={[styles.buttonText]}>Facebook</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.googleButton]}>
-                    <Image source={require("../assests/images/google.png")} />
-                    <Text style={[styles.buttonText]}>Google</Text>
-                </TouchableOpacity>
-            </View>
+         <View style={{height:"100%",backgroundColor:theme.colors.bg}}>
+                <ScrollView contentContainerStyle={{ padding: 20, justifyContent:"center",alignItems:'center' }}>
+            <Text style={[globalStyles.text,{fontSize:20}]}>Sign Up</Text>
+             <Image source={require("../assests/images/Z.png")} style={{width:200,height:200,borderRadius:100}}/>
             <CustomTextInput
                 label={"Name"}
-                value={name}
+                value={data?.name||name}
                 setValue={setName}
-                placeholder={"Enter Your Name"}
+                placeholder={"Name"}
                 marginTop={"5%"}
+                iconName={"account"}
             />
-            <CustomTextInput
-                label={"Age"}
-                value={age}
-                setValue={setAge}
-                placeholder={"Enter Your Age"}
-                numeric={"numeric"}
-                marginTop={"5%"}
-            />
-            <View style={{ height: 70, marginTop: "5%" }} >
+           
+            {/* <View style={{ height: 70, marginTop: "5%" }} >
                 <Text style={{ color: "black", opacity: .3, marginBottom: 15 }}>Gender</Text>
                 <ScrollView horizontal>
                     {genderArray.map((item) => (
@@ -99,39 +145,49 @@ const CreateAccount = () => {
                             <Text style={{color:item==gender?"white":"black"}}>{item}</Text></TouchableOpacity>
                     ))}
                 </ScrollView>
-            </View>
+            </View> */}
             <CustomTextInput
                 label={"Phone"}
-                value={phone}
+                value={data?.mobile||phone}
                 setValue={setPhone}
-                placeholder={"Enter phone number"}
+                iconName={"phone"}
+                placeholder={"Mobile"}
                 numeric={"numeric"}
                 marginTop={"5%"}
             />
             <CustomTextInput
                 label={"Email Id"}
-                value={email}
+                value={data?.email||email}
+                iconName={"email"}
                 setValue={setEmail}
-                placeholder={"Enter Your Email id"}
+                placeholder={"Email"}
                 marginTop={"5%"}
             />
-            <CustomTextInput
+{          !data?.name&&  <CustomTextInput
                 label={"Password"}
                 value={password}
                 setValue={setPassword}
-                placeholder={"Create Your Password"}
+                iconName={"key"}
+                placeholder={"Create Password"}
                 marginTop={"5%"}
-            />
-            {loading?<ActivityIndicator size={"large"} color={theme.colors.primaryOpacity} style={{marginRight:"auto",marginLeft:"auto",marginTop:"10%"}}/>:
-             <CustomButton onPressfuntion={()=>createAccount()} text={"Sign Up"} marginTop={"10%"} />
-                    }
-            <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-                <Text style={[styles.text2]}>Already have an account ? </Text>
+                secure={true}
+                visible={visible}
+                setVisible={setVisible}
+            />}
+{   data?.name      ?
+ <CustomButton loading={loading} onPressfuntion={()=>{UpdateAcc()}} text={"Update"} marginTop={"10%"} />
+:
+ <CustomButton loading={loading} onPressfuntion={()=>{createAccount()}} text={"Sign Up"} marginTop={"10%"} />
+}                    
+
+            {!data?.name&&<View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
+                <Text style={[{color:"black"}]}>Already have an account ? </Text>
                 <TouchableOpacity onPress={()=>navigation.navigate("Login")}>
-                <Text style={{ color: theme.colors.primaryOpacity, fontWeight: "bold" }}> Log in now</Text>
+                <Text style={{ color: theme.colors.primary, fontWeight: "bold" }}> Log in now</Text>
                 </TouchableOpacity>
-            </View>
+            </View>}
         </ScrollView>
+         </View>
     )
 }
 

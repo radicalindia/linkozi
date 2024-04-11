@@ -1,6 +1,7 @@
 const initialState = {
     nav: null,
     submitloading:false,
+    name:null,
     error:null,
     loading:false,
   };
@@ -14,6 +15,13 @@ const initialState = {
           loading: false,
           error: null,
         };
+        case "SET_NAME_SCREEN_REF":
+          return {
+            ...state,
+            name: action.payload,
+            loading: false,
+            error: null,
+          };
       case "REF":
         return {
           ...state,

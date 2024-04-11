@@ -1,9 +1,12 @@
 const theme = {
     colors: {
-      primary: "#DC3545",
-      primaryOpacity:"rgba(220, 53, 69, 0.5)",
+      primary: "#E8757E",
+      primaryOpacity:"#FFF2F3",
       white: "#FFFFFF",
-
+      bg:"#F9FCFF",
+      buttonBG:"#24293E",
+      background:"rgba(0,0,0,.4)",
+      cyan:"#0CD6AF"
     },
   };
   export default theme;
